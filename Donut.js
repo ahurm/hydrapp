@@ -4,16 +4,22 @@ import { VictoryPie } from 'victory-native';
 
 const Donut = () => {
 
+    const realGraphicData = [{ y: 49, x: ' ' }, { y: 51, x: ' ' }]; // Real data
+
     const [graphicData, setGraphicData] = useState(
         [
-            { y: 59, x: ' '},
-            { y: 41, x: ' '}
+            // Data to make animation work
+            { y: 0, x: ' ' },  
+            { y: 100, x: ' ' }
         ]
     );
-
     const [graphicColor, setGraphicColor] = useState(
         ['#002FFC', '#E6E6E6']
     );
+
+    useEffect(() => {
+        setGraphicData(realGraphicData); // Data we want to display
+      }, []);
 
     return (
         <VictoryPie
@@ -24,6 +30,7 @@ const Donut = () => {
             width={350}
             height={350}
             innerRadius={105}
+            animate={{ easing: 'exp' }}
         /> 
     );
 }
