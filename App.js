@@ -7,23 +7,31 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import CustomPie from './CustomPie';
+import Donut from './Donut';
+
+<script src="http://localhost:8097"></script>
 
 function HydrationScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <CustomPie></CustomPie>
+    <View style={styles.container}>
+      <Donut></Donut>
+      <View style={styles.circleContainer}>
+        <View style={styles.circle}>
+          <Text style={styles.hydrationText}>0.97 l</Text>
+          <Text>Remaining</Text>
+        </View>
+      </View>
     </View>
   );
 }
 
 function HistoryScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={styles.container}>
       <Text>History!</Text>
     </View>
   );
@@ -31,7 +39,7 @@ function HistoryScreen() {
 
 function SettingsScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={styles.container}>
       <Text>Settings!</Text>
     </View>
   );
@@ -73,5 +81,42 @@ const App: () => React$Node = () => {
     </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    backgroundColor: '#EFEFEF',
+  },
+  circleContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+    height: 350,
+    justifyContent: 'center',
+  },
+  hydrationText: {
+    backgroundColor: 'transparent',
+    color: '#002FFC',
+    fontSize: 36,
+  },
+  circle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 175,
+    height: 175,
+    borderRadius: 175/2,
+    backgroundColor: 'white',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    
+    elevation: 4,
+}
+});
 
 export default App;
