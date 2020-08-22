@@ -13,6 +13,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { Body, Card, CardItem, Container,Content, Header, Left, Right, Text, Title } from 'native-base';
 import HydrationGauge from './components/HydrationGauge';
+import DataItem from './components/DataItem';
 
 <script src="http://localhost:8097"></script>
 
@@ -29,17 +30,30 @@ function HydrationScreen() {
         <Card>
           <CardItem>
             <View style={styles.cardRow}>
+              <DataItem value={23} text={'moi'} />
               <View style={styles.cardRowItem}>
-                <Text>5</Text>
-                <Text>Drinks</Text>
+                <Text style={styles.cardRowItemValue}>5</Text>
+                <Text style={styles.cardRowItemText}>Drinks</Text>
               </View>
               <View style={styles.cardRowItem}>
-                <Text>5</Text>
-                <Text>Drinks</Text>
+                <Text style={styles.cardRowItemValue}>2.16 l</Text>
+                <Text style={styles.cardRowItemText}>Goal</Text>
+              </View>
+            </View>
+          </CardItem>
+          <CardItem>
+            <View style={styles.cardRow}>
+              <View style={styles.cardRowItem}>
+                <Text style={styles.cardRowItemValue}>55%</Text>
+                <Text style={styles.cardRowItemText}>Balance</Text>
               </View>
               <View style={styles.cardRowItem}>
-                <Text>5</Text>
-                <Text>Drinks</Text>
+                <Text style={styles.cardRowItemValue}>1.02 l</Text>
+                <Text style={styles.cardRowItemText}>Status</Text>
+              </View>
+              <View style={styles.cardRowItem}>
+                <Text style={styles.cardRowItemValue}>200 ml</Text>
+                <Text style={styles.cardRowItemText}>Last</Text>
               </View>
             </View>
           </CardItem>
@@ -113,7 +127,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   },
   cardRowItem: {
-    alignItems: 'center'
+    // Without borders texts are clipping weirdly
+    // borderColor: 'red',
+    // borderWidth: 2,
+    alignItems: 'center',
+    width: 100
+  },
+  cardRowItemValue: {
+    color: '#002FFC',
+    fontSize: 22,
+  },
+  cardRowItemText: {
+    fontSize: 14,
+    marginBottom: 3
   }
 });
 
