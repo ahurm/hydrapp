@@ -7,25 +7,46 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import Donut from './Donut';
+import { Body, Card, CardItem, Container,Content, Header, Left, Right, Text, Title } from 'native-base';
+import HydrationGauge from './components/HydrationGauge';
 
 <script src="http://localhost:8097"></script>
 
 function HydrationScreen() {
   return (
-    <View style={styles.container}>
-      <Donut></Donut>
-      <View style={styles.circleContainer}>
-        <View style={styles.circle}>
-          <Text style={styles.hydrationText}>0.97 l</Text>
-          <Text>Remaining</Text>
-        </View>
-      </View>
-    </View>
+    <Container style={styles.container}>
+      <Header>
+        <Body>
+          <Title style={{paddingLeft: 25,}}>Hydrapp</Title>
+        </Body>
+      </Header>
+      <Content>
+        <HydrationGauge />
+        <Card>
+          <CardItem>
+            <View style={styles.cardRow}>
+              <View style={styles.cardRowItem}>
+                <Text>5</Text>
+                <Text>Drinks</Text>
+              </View>
+              <View style={styles.cardRowItem}>
+                <Text>5</Text>
+                <Text>Drinks</Text>
+              </View>
+              <View style={styles.cardRowItem}>
+                <Text>5</Text>
+                <Text>Drinks</Text>
+              </View>
+            </View>
+          </CardItem>
+        </Card>
+      </Content>
+    </Container>
+
   );
 }
 
@@ -84,39 +105,16 @@ const App: () => React$Node = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
     backgroundColor: '#EFEFEF',
   },
-  circleContainer: {
-    position: 'absolute',
-    alignItems: 'center',
-    height: 350,
-    justifyContent: 'center',
+  cardRow: {
+    flex: 1, 
+    flexDirection: 'row', 
+    justifyContent: 'space-around'
   },
-  hydrationText: {
-    backgroundColor: 'transparent',
-    color: '#002FFC',
-    fontSize: 36,
-  },
-  circle: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 175,
-    height: 175,
-    borderRadius: 175/2,
-    backgroundColor: 'white',
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    
-    elevation: 4,
-}
+  cardRowItem: {
+    alignItems: 'center'
+  }
 });
 
 export default App;
