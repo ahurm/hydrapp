@@ -11,56 +11,55 @@ import { StyleSheet, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { Body, Card, CardItem, Container,Content, Header, Left, Right, Text, Title } from 'native-base';
+import { Body, Button, Card, CardItem, Container,Content, Header, Left, Right, Text, Title } from 'native-base';
 import HydrationGauge from './components/HydrationGauge';
 import DataItem from './components/DataItem';
+import RNModal from './components/RNModal';
 
 <script src="http://localhost:8097"></script>
 
 function HydrationScreen() {
+
+  const [isModalVisible, setModalVisible] = useState(false);
+  
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   return (
+
     <Container style={styles.container}>
       <Header>
-        <Body>
-          <Title style={{paddingLeft: 25,}}>Hydrapp</Title>
+        <Body style={styles.headerBody}>
+          <Title style={{paddingLeft: 25}}>Hydrapp</Title>
+          <Right>
+            <Button onPress={toggleModal}>
+              <Text>ADD</Text>
+            </Button>
+          </Right>
         </Body>
       </Header>
       <Content>
+        <RNModal visible={isModalVisible} toggle={toggleModal} />
         <HydrationGauge />
         <Card>
           <CardItem>
             <View style={styles.cardRow}>
-              <DataItem value={23} text={'moi'} />
-              <View style={styles.cardRowItem}>
-                <Text style={styles.cardRowItemValue}>5</Text>
-                <Text style={styles.cardRowItemText}>Drinks</Text>
-              </View>
-              <View style={styles.cardRowItem}>
-                <Text style={styles.cardRowItemValue}>2.16 l</Text>
-                <Text style={styles.cardRowItemText}>Goal</Text>
-              </View>
+              <DataItem value={'230 ml'} text={'Average'} />
+              <DataItem value={'5'} text={'Drinks'} />
+              <DataItem value={'2.16 l'} text={'Goal'} />
             </View>
           </CardItem>
           <CardItem>
             <View style={styles.cardRow}>
-              <View style={styles.cardRowItem}>
-                <Text style={styles.cardRowItemValue}>55%</Text>
-                <Text style={styles.cardRowItemText}>Balance</Text>
-              </View>
-              <View style={styles.cardRowItem}>
-                <Text style={styles.cardRowItemValue}>1.02 l</Text>
-                <Text style={styles.cardRowItemText}>Status</Text>
-              </View>
-              <View style={styles.cardRowItem}>
-                <Text style={styles.cardRowItemValue}>200 ml</Text>
-                <Text style={styles.cardRowItemText}>Last</Text>
-              </View>
+              <DataItem value={'55%'} text={'Balance'} />
+              <DataItem value={'1.02 l'} text={'Status'} />
+              <DataItem value={'200 ml'} text={'Last'} />
             </View>
           </CardItem>
         </Card>
       </Content>
     </Container>
-
   );
 }
 
@@ -126,20 +125,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     justifyContent: 'space-around'
   },
-  cardRowItem: {
-    // Without borders texts are clipping weirdly
-    // borderColor: 'red',
-    // borderWidth: 2,
-    alignItems: 'center',
-    width: 100
-  },
-  cardRowItemValue: {
-    color: '#002FFC',
-    fontSize: 22,
-  },
-  cardRowItemText: {
-    fontSize: 14,
-    marginBottom: 3
+  headerBody: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    flexDirection: 'row'
   }
 });
 

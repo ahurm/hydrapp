@@ -23,8 +23,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: '#EFEFEF',
-    borderColor: 'red',
-    borderWidth: 1
   },
   circleContainer: {
     position: 'absolute',
