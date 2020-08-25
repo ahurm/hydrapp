@@ -1,21 +1,21 @@
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import React from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+
 import Donut from './Donut';
 
-
-const HydrationGauge = () => {
+const HydrationGauge = (props) => {
   return (
     <View style={styles.container}>
       <Donut></Donut>
       <View style={styles.circleContainer}>
         <View style={styles.circle}>
-          <Text style={styles.hydrationText}>0.97 l</Text>
+          <Text style={styles.hydrationText}>{props.remaining} l</Text>
           <Text>Remaining</Text>
         </View>
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -40,9 +40,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 175,
     height: 175,
-    borderRadius: 175/2,
+    borderRadius: 175 / 2,
     backgroundColor: 'white',
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
     elevation: 4,
-},
+  },
 });
 
 export default HydrationGauge;
