@@ -6,11 +6,11 @@ import Donut from './Donut';
 const HydrationGauge = (props) => {
   return (
     <View style={styles.container}>
-      <Donut></Donut>
+      <Donut balance={props.balance} remaining={props.remaining}></Donut>
       <View style={styles.circleContainer}>
         <View style={styles.circle}>
           <Text style={styles.hydrationText}>{props.remaining} l</Text>
-          <Text>Remaining</Text>
+          <Text>{props.remaining >= 0 ? 'Remaining' : 'Over goal'}</Text>
         </View>
       </View>
     </View>
