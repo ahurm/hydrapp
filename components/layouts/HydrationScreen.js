@@ -1,21 +1,16 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {
-  Body,
-  Button,
   Card,
   CardItem,
   Container,
   Content,
-  Header,
-  Right,
-  Text,
-  Title,
 } from 'native-base';
 
 import HydrationGauge from '../HydrationGauge';
 import DataItem from '../DataItem';
 import RNModal from '../RNModal';
+import CustomHeader from '../CustomHeader';
 
 const HydrationScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -61,16 +56,7 @@ const HydrationScreen = () => {
 
   return (
     <Container style={styles.container}>
-      <Header>
-        <Body style={styles.headerBody}>
-          <Title style={{paddingLeft: 25}}>Hydrapp {debugValue}</Title>
-          <Right>
-            <Button onPress={toggleModal}>
-              <Text>ADD</Text>
-            </Button>
-          </Right>
-        </Body>
-      </Header>
+      <CustomHeader showButton toggleModal={toggleModal} />
       <Content>
         <RNModal visible={modalVisible} toggle={toggleModal} add={addHandler} />
         <HydrationGauge balance={values.balance} remaining={values.remaining} />

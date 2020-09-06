@@ -7,26 +7,17 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {View, Text} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 
+import SettingsScreen from './components/layouts/SettingsScreen';
 import HydrationScreen from './components/layouts/HydrationScreen';
 import LogScreen from './components/layouts/LogScreen';
 <script src="http://localhost:8097"></script>;
 // Firebase rajapinta
 // Get ja send data, data alikomponentteihin
-
-
-
-function SettingsScreen() {
-  return (
-    <View style={styles.container}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
 
 const Tab = createBottomTabNavigator();
 
@@ -61,17 +52,5 @@ const App: () => React$Node = () => {
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#EFEFEF',
-  },
-  headerBody: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-});
 
 export default App;
