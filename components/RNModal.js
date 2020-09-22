@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import {Button, Text, View, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import Modal from 'react-native-modal';
 import Slider from '@react-native-community/slider';
-import {ProgressBar} from 'native-base';
+import {Button, Text} from 'native-base';
 
 const RNModal = (props) => {
   const [sliderValue, setSliderValue] = useState(200);
@@ -23,7 +23,7 @@ const RNModal = (props) => {
       onBackdropPress={props.toggle}
       onBackButtonPress={props.toggle}>
       <View style={styles.container}>
-        <Text>Value: {sliderValue} ml</Text>
+        <Text style={styles.valueText}>Value: {sliderValue} ml</Text>
         <Slider
           style={{width: 200, height: 50}}
           minimumValue={50}
@@ -35,7 +35,11 @@ const RNModal = (props) => {
           thumbTintColor="#002FFC"
           onValueChange={changeValueHandler}
         />
-        <Button title="ADD" onPress={addHandler} />
+        <View style={styles.buttonContainer}>
+          <Button rounded  onPress={addHandler}>
+            <Text>Save</Text>
+          </Button>
+        </View>
       </View>
     </Modal>
   );
@@ -44,9 +48,15 @@ const RNModal = (props) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'flex-start',
     backgroundColor: '#EFEFEF',
   },
+  valueText : {
+    marginTop: 10,
+    fontSize: 18,
+  },
+  buttonContainer: {
+    marginBottom: 10
+  }
 });
 
 export default RNModal;

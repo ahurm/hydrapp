@@ -44,6 +44,7 @@ const App: () => React$Node = () => {
         tabBarOptions={{
           activeTintColor: '#002FFC',
           inactiveTintColor: 'gray',
+          keyboardHidesTabBar: 'true',
         }}>
         <Tab.Screen name="Hydration" component={HydrationScreen} />
         <Tab.Screen name="Log" component={LogScreen} />

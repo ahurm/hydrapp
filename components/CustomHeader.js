@@ -15,7 +15,7 @@ const CustomHeader = (props) => {
         <Body style={styles.headerBody}>
           <Title style={styles.title}>Hydrapp</Title>
           <Right>
-            {props.showButton && <Button onPress={props.toggleModal}>
+            {props.showButton && <Button rounded onPress={props.toggleModal}>
               <Text>ADD</Text>
             </Button>}
           </Right>
