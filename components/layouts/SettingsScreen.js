@@ -1,20 +1,30 @@
-import React, {useState} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Container, Content, Form, Input, Item, Label, Text} from 'native-base';
 
+import {AppContext} from '../AppContext';
 import CustomHeader from '../CustomHeader';
 
 const SettingsScreen = () => {
 
-  const [username, setUsername] = useState();
+  const [tempUsername, setTempUsername] = useState();
   const [weight, setWeight] = useState();
   const [age, setAge] = useState();
-
+  const {username, changeUsername} = useContext(AppContext);
   const clearData = () => {
-    setUsername('');
+    setTempUsername('');
+    changeUsername('');
     setWeight('');
     setAge('');
   };
+  const handleSave = () => {
+    changeUsername(tempUsername);
+  };
+
+  useEffect(() => {
+    setTempUsername(username);
+  }, [username])
+  
 
   return (
     <Container style={styles.container}>
@@ -30,8 +40,8 @@ const SettingsScreen = () => {
           <Item stackedLabel style={styles.deleteBottomBorder}>
             <Label>Username</Label>
             <Input 
-              onChangeText={text => setUsername(text)}
-              value={username} 
+              onChangeText={text => setTempUsername(text)}
+              value={tempUsername} 
               underlineColorAndroid='#002FFC' />
           </Item>
           <Item stackedLabel style={styles.deleteBottomBorder}>
@@ -52,14 +62,13 @@ const SettingsScreen = () => {
           </Item>
         </Form>
         <View style={styles.buttonContainer}>
-          <Button rounded >
+          <Button rounded onPress={handleSave}>
             <Text>Save</Text>
           </Button>
           <Button rounded onPress={clearData}>
             <Text>Clear</Text>
           </Button>
         </View>
-        <Text>{username}</Text>
       </Content>
     </Container>
   );
