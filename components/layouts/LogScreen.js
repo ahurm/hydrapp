@@ -9,6 +9,9 @@ import {
 import CustomHeader from '../CustomHeader';
 
 const LogScreen = () => {
+
+  // Check if log exists
+  // If not then render "Log not found."
   return (
     <Container style={styles.container}>
       <CustomHeader showButton={false} />

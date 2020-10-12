@@ -9,7 +9,7 @@ const HydrationGauge = (props) => {
       <Donut balance={props.balance} remaining={props.remaining}></Donut>
       <View style={styles.circleContainer}>
         <View style={styles.circle}>
-          <Text style={styles.hydrationText}>{props.remaining} l</Text>
+          <Text style={styles.hydrationText}>{props.remaining >= 0 ? props.remaining : props.remaining * (-1) } l</Text>
           <Text>{props.remaining >= 0 ? 'Remaining' : 'Over goal'}</Text>
         </View>
       </View>

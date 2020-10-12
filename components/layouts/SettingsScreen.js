@@ -8,22 +8,59 @@ import CustomHeader from '../CustomHeader';
 const SettingsScreen = () => {
 
   const [tempUsername, setTempUsername] = useState();
-  const [weight, setWeight] = useState();
-  const [age, setAge] = useState();
-  const {username, changeUsername} = useContext(AppContext);
+  const [tempWeight, setTempWeight] = useState();
+  const [tempAge, setTempAge] = useState();
+
+  const {username, weight, age, goal, changeSettings} = useContext(AppContext);
+
   const clearData = () => {
     setTempUsername('');
-    changeUsername('');
-    setWeight('');
-    setAge('');
+    setTempWeight('');
+    setTempAge('');
+    changeSettings('', '', '', 0);
   };
+
+  const calculateGoal = (weight, age) => {
+    let goal = 2.0;
+    if (age >= 1 && age <= 3)
+      goal = parseFloat((weight * 0.09).toFixed(2));
+    else if (age >= 4 && age <= 6)
+      goal = parseFloat((weight * 0.08).toFixed(2));
+    else if (age >= 7 && age <= 10)
+      goal = parseFloat((weight * 0.06).toFixed(2));
+    else if (age >= 11 && age <= 14)
+      goal = parseFloat((weight * 0.05).toFixed(2));
+    else if (age >= 15 && age <= 18)
+      goal = parseFloat((weight * 0.04).toFixed(2));
+    else if (age >= 19)
+      goal = parseFloat((weight * 0.035).toFixed(2));
+    else
+      goal = 2.0;
+
+    if (goal > 3.5)
+      goal = 3.5;
+
+    return goal;
+  };
+
   const handleSave = () => {
-    changeUsername(tempUsername);
+    const tempGoal = calculateGoal(tempWeight, tempAge);
+    const values = {
+      username: tempUsername,
+      weight: tempWeight,
+      age: tempAge,
+      goal: tempGoal,
+    };
+    changeSettings(values);
   };
+
+
 
   useEffect(() => {
     setTempUsername(username);
-  }, [username])
+    setTempWeight(weight);
+    setTempAge(age);
+  }, [username, weight, age])
   
 
   return (
@@ -47,16 +84,16 @@ const SettingsScreen = () => {
           <Item stackedLabel style={styles.deleteBottomBorder}>
             <Label>Weight (kg)</Label>
             <Input 
-              onChangeText={text => setWeight(text)}
-              value={weight} 
+              onChangeText={text => setTempWeight(text)}
+              value={tempWeight} 
               underlineColorAndroid='#002FFC' 
               keyboardType='decimal-pad'/>
           </Item>
           <Item stackedLabel style={styles.deleteBottomBorder}>
             <Label>Age</Label>
             <Input 
-              onChangeText={text => setAge(text)}
-              value={age} 
+              onChangeText={text => setTempAge(text)}
+              value={tempAge} 
               underlineColorAndroid='#002FFC' 
               keyboardType='decimal-pad'/>
           </Item>

@@ -13,11 +13,19 @@ const Tab = createBottomTabNavigator();
 
 const NavigationWrapper = () => {
 
-  const {username} = useContext(AppContext);
+  const {username, loading} = useContext(AppContext);
 
+  if (loading) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   return (
     <NavigationContainer>
-      {username.length > 0 ? <Tab.Navigator
+      {console.log("NavigationContainer username: " + username)}
+      {username && username.length > 0 ? <Tab.Navigator
         screenOptions={({route}) => ({
           tabBarIcon: ({focused, color, size}) => {
             let iconName;
