@@ -21,38 +21,41 @@ const NavigationWrapper = () => {
         <Text>Loading...</Text>
       </View>
     );
+  } else {
+    return (
+      <NavigationContainer>
+        {console.log("NavigationContainer username: " + username)}
+        {console.log("NavigationContainer loading: " + loading)}
+        {username && username.length > 0 ? <Tab.Navigator
+          screenOptions={({route}) => ({
+            tabBarIcon: ({focused, color, size}) => {
+              let iconName;
+  
+              if (route.name === 'Hydration') {
+                iconName = focused ? 'water' : 'water-outline';
+              } else if (route.name === 'Log') {
+                iconName = focused ? 'document-text' : 'document-text-outline';
+              } else if (route.name === 'Settings') {
+                iconName = focused ? 'list-circle' : 'list-circle-outline';
+              }
+  
+              // You can return any component that you like here!
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+          })}
+          tabBarOptions={{
+            activeTintColor: '#002FFC',
+            inactiveTintColor: 'gray',
+            keyboardHidesTabBar: 'true',
+          }}>
+          <Tab.Screen name="Hydration" component={HydrationScreen} />
+          <Tab.Screen name="Log" component={LogScreen} />
+          <Tab.Screen name="Settings" component={SettingsScreen} />
+        </Tab.Navigator> : <SettingsScreen />}
+      </NavigationContainer>
+    );
   }
-  return (
-    <NavigationContainer>
-      {console.log("NavigationContainer username: " + username)}
-      {username && username.length > 0 ? <Tab.Navigator
-        screenOptions={({route}) => ({
-          tabBarIcon: ({focused, color, size}) => {
-            let iconName;
 
-            if (route.name === 'Hydration') {
-              iconName = focused ? 'water' : 'water-outline';
-            } else if (route.name === 'Log') {
-              iconName = focused ? 'document-text' : 'document-text-outline';
-            } else if (route.name === 'Settings') {
-              iconName = focused ? 'list-circle' : 'list-circle-outline';
-            }
-
-            // You can return any component that you like here!
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-        })}
-        tabBarOptions={{
-          activeTintColor: '#002FFC',
-          inactiveTintColor: 'gray',
-          keyboardHidesTabBar: 'true',
-        }}>
-        <Tab.Screen name="Hydration" component={HydrationScreen} />
-        <Tab.Screen name="Log" component={LogScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-      </Tab.Navigator> : <SettingsScreen />}
-    </NavigationContainer>
-  );
 };
 
 export default NavigationWrapper;

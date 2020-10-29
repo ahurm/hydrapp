@@ -8,9 +8,11 @@ const AppContext = createContext({
   goal: 0,
   loading: true,
   hydValues: {},
+  hydLog: [],
   changeSettings: () => null,
   setLoading: () => null,
   setHydValues: () => null,
+  setHydLog: () => null,
 });
 
 const AppProvider = (props) => {
@@ -27,6 +29,7 @@ const AppProvider = (props) => {
     status: 0,
     last: 0,
   });
+  const [hydLog, setHydLog] = useState([]);
 
 
   const storeSettings = async (key, value) => {
@@ -54,6 +57,9 @@ const AppProvider = (props) => {
       balance: ((hydValues.status / vals.goal) * 100).toFixed(2),
     });
 
+    // Empty log
+    setHydLog([]);
+
     // Write settings to local storage
     storeSettings('settings', vals);
   }, []);
@@ -67,6 +73,16 @@ const AppProvider = (props) => {
       } catch (e) {
         // saving error
         console.log('storeHydValues e: ' + e);
+      }
+    };
+
+    const storeHydLog = async (key, value) => {
+      try {
+        const jsonValue = JSON.stringify(value);
+        await AsyncStorage.setItem(key, jsonValue);
+      } catch (e) {
+        // saving error
+        console.log('storeHydLog e: ' + e);
       }
     };
 
@@ -84,6 +100,7 @@ const AppProvider = (props) => {
       console.log('useEffect storeHydValues hydValues');
       console.log(hydValues);
       storeHydValues('data', hydValues);
+      storeHydLog('log', hydLog);
     }
   }, [hydValues]);
 
@@ -106,6 +123,22 @@ const AppProvider = (props) => {
       }
     };
 
+    const getHydLog = async (key) => {
+      try {
+        let jsonValue = await AsyncStorage.getItem(key);
+        jsonValue = jsonValue != null ? JSON.parse(jsonValue) : null;
+
+        if (jsonValue != null) {
+          console.log('getHydLog setHydLog');
+          setHydLog(jsonValue);
+          console.log(jsonValue);
+        }
+      } catch (e) {
+        // error reading value
+        console.log('getHydLog e: ' + e);
+      }
+    };
+
     const getSettings = async (key) => {
       try {
         let jsonValue = await AsyncStorage.getItem(key);
@@ -125,6 +158,7 @@ const AppProvider = (props) => {
         }
 
         getHydValues('data');
+        getHydLog('log');
       } catch (e) {
         // error reading value
         console.log('getSettings e: ' + e);
@@ -144,9 +178,11 @@ const AppProvider = (props) => {
         goal,
         loading,
         hydValues,
+        hydLog,
         changeSettings,
         setLoading,
         setHydValues,
+        setHydLog,
       }}>
       {props.children}
     </AppContext.Provider>
