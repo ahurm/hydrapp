@@ -16,7 +16,7 @@ import CustomHeader from '../CustomHeader';
 
 const HydrationScreen = () => {
   const {goal, hydValues, setHydValues} = useContext(AppContext);
-  const {hydLog, setHydLog} = useContext(AppContext);
+  const {hydLogItem, setHydLogItem} = useContext(AppContext);
   const [modalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -26,6 +26,11 @@ const HydrationScreen = () => {
   const addHandler = (value) => {
     value = parseFloat(value);
     updateValues(value);
+  };
+
+  const addZero = (i) => {
+    if (i < 10) i = "0" + i;
+    return i;
   };
 
   const updateValues = (value) => {
@@ -47,9 +52,13 @@ const HydrationScreen = () => {
     console.log("updateValues setHydValues");
     setHydValues({remaining, average, drinkCount, balance, status, last});
     
-    // Add log item
-    hydLog.push({drink: value, timestamp: new Date()});
-    setHydLog(hydLog);
+    // Update log item
+    const timestamp = new Date();
+    const date = timestamp.getDate() + '.' + (timestamp.getMonth()+1) + '.' + timestamp.getFullYear();
+    const minutes = addZero(timestamp.getMinutes()); 
+    const hours = addZero(timestamp.getHours());
+    const time = hours + ':' + minutes;
+    setHydLogItem({drink: value, time: time, date: date});
   };
 
   return (

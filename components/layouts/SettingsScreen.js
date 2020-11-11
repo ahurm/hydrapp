@@ -1,6 +1,6 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Container, Content, Form, Input, Item, Label, Text} from 'native-base';
+import {Body, Button, Container, Content, Form, Input, Item, Label, Text} from 'native-base';
 
 import {AppContext} from '../AppContext';
 import CustomHeader from '../CustomHeader';
@@ -66,47 +66,49 @@ const SettingsScreen = () => {
   return (
     <Container style={styles.container}>
       <CustomHeader showButton={false} />
-      <Content contentContainerStyle={styles.contentContainer}>
-        <View style={styles.infoTextContainer}>
-          <Text>
-            Submit your username, weight in kilograms and age to 
-            calculate your daily water intake needs.
-          </Text>
-        </View>
-        <Form style={styles.formContainer}>
-          <Item stackedLabel style={styles.deleteBottomBorder}>
-            <Label>Username</Label>
-            <Input 
-              onChangeText={text => setTempUsername(text)}
-              value={tempUsername} 
-              underlineColorAndroid='#002FFC' />
-          </Item>
-          <Item stackedLabel style={styles.deleteBottomBorder}>
-            <Label>Weight (kg)</Label>
-            <Input 
-              onChangeText={text => setTempWeight(text)}
-              value={tempWeight} 
-              underlineColorAndroid='#002FFC' 
-              keyboardType='decimal-pad'/>
-          </Item>
-          <Item stackedLabel style={styles.deleteBottomBorder}>
-            <Label>Age</Label>
-            <Input 
-              onChangeText={text => setTempAge(text)}
-              value={tempAge} 
-              underlineColorAndroid='#002FFC' 
-              keyboardType='decimal-pad'/>
-          </Item>
-        </Form>
-        <View style={styles.buttonContainer}>
-          <Button rounded onPress={handleSave}>
-            <Text>Save</Text>
-          </Button>
-          <Button rounded onPress={clearData}>
-            <Text>Clear</Text>
-          </Button>
-        </View>
-      </Content>
+        <Content contentContainerStyle={styles.contentContainer}>
+          <View style={styles.flexboxContainer}>
+            <View style={styles.infoTextContainer}>
+              <Text>
+                Submit your username, weight in kilograms and age to 
+                calculate your daily water intake needs.
+              </Text>
+            </View>
+            <Form style={styles.formContainer}>
+              <Item stackedLabel style={styles.deleteBottomBorder}>
+                <Label>Username</Label>
+                <Input 
+                  onChangeText={text => setTempUsername(text)}
+                  value={tempUsername} 
+                  underlineColorAndroid='#002FFC' />
+              </Item>
+              <Item stackedLabel style={styles.deleteBottomBorder}>
+                <Label>Weight (kg)</Label>
+                <Input 
+                  onChangeText={text => setTempWeight(text)}
+                  value={tempWeight} 
+                  underlineColorAndroid='#002FFC' 
+                  keyboardType='decimal-pad'/>
+              </Item>
+              <Item stackedLabel style={styles.deleteBottomBorder}>
+                <Label>Age</Label>
+                <Input 
+                  onChangeText={text => setTempAge(text)}
+                  value={tempAge} 
+                  underlineColorAndroid='#002FFC' 
+                  keyboardType='decimal-pad'/>
+              </Item>
+            </Form>
+            <View style={styles.buttonContainer}>
+              <Button rounded onPress={handleSave}>
+                <Text>Save</Text>
+              </Button>
+              <Button rounded onPress={clearData}>
+                <Text>Clear</Text>
+              </Button>
+            </View>
+          </View>
+        </Content>
     </Container>
   );
 };
@@ -116,9 +118,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#EFEFEF',
   },
   contentContainer: {
+    flexGrow: 1,
+    justifyContent: 'center'
+  },
+  flexboxContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   formContainer: {
     width: 200,
