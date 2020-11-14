@@ -15,24 +15,19 @@ import {AppContext} from '../AppContext';
 import CustomHeader from '../CustomHeader';
 import DataItem from '../DataItem';
 
-const LogScreen = () => {
-  const {hydLog, setHydLog} = useContext(AppContext);
-  const hydLogItems = [];
-  const addZero = (i) => {
-    if (i < 10) i = "0" + i;
-    return i;
-  };
 
+const LogScreen = () => {
+  const {hydLog} = useContext(AppContext);
+  const hydLogItems = [];
+  console.log("LogScreen hydLog");
+  console.log(hydLog);
   // Check if log exists
   if (hydLog.length > 0) {
-    for (let i = 0; i < hydLog.length; i++) {
-      const drink = hydLog[i].drink;
-      const timestamp = hydLog[i].timestamp;
-      const date = timestamp.getDate() + '.' + (timestamp.getMonth()+1) + '.' + timestamp.getFullYear();
-      const minutes = addZero(timestamp.getMinutes()); 
-      const hours = addZero(timestamp.getHours());
-      const time = hours + ':' + minutes;
-      
+    hydLog.map((el, i) => {
+      const drink = el.drink;
+      const date = el.date;
+      const time = el.time;
+
       hydLogItems.push(
         <ListItem noIndent key={i} style={styles.listItem}>
           <View style={styles.listItemRow}>
@@ -41,7 +36,7 @@ const LogScreen = () => {
           </View>
         </ListItem>
       );
-    }
+    });
     return (
       <Container style={styles.container}>
         <CustomHeader showButton={false} />

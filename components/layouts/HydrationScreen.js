@@ -23,11 +23,6 @@ const HydrationScreen = () => {
     setModalVisible(!modalVisible);
   };
 
-  const addHandler = (value) => {
-    value = parseFloat(value);
-    updateValues(value);
-  };
-
   const addZero = (i) => {
     if (i < 10) i = "0" + i;
     return i;
@@ -59,6 +54,11 @@ const HydrationScreen = () => {
     const hours = addZero(timestamp.getHours());
     const time = hours + ':' + minutes;
     setHydLogItem({drink: value, time: time, date: date});
+  };
+
+  const addHandler = (value) => {
+    value = parseFloat(value);
+    updateValues(value);
   };
 
   return (
