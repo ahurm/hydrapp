@@ -33,6 +33,7 @@ const firebaseConfig = {
   messagingSenderId: "195295257327",
   appId: "1:195295257327:web:b3c01c4674d256026ff11a"
 };
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
@@ -40,6 +41,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const userListRef = db.ref('users');
 let userKey = "";
+let lastDate = "";
 
 const AppProvider = props => {
   const [username, setUsername] = useState('');
@@ -65,6 +67,8 @@ const AppProvider = props => {
 
   // Store firebase user key to local storage
   const storeKey = async (key, value) => {
+    console.log("storeKey IN");
+    
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(key, jsonValue);
@@ -72,11 +76,14 @@ const AppProvider = props => {
       // saving error
       console.log('storeKey e: ' + e);
     }
+
+    console.log("storeKey OUT");
   };
 
   /* Store user settings and firebase user key to 
   local storage and username to Firebase */
   const storeSettings = async (key, value) => {
+    console.log("storeSettings IN");
     try {
       // Push new user to Firebase and get key
       let newUserKey = userListRef.push({
@@ -92,32 +99,63 @@ const AppProvider = props => {
       // saving error
       console.log('storeSettings e: ' + e);
     }
+    console.log("storeSettings OUT");
   };
 
   // Store new log item to Firebase
   const storeHydLogItem = value => {
+    console.log("storeHydLogItem IN");
+    if (!(typeof value === 'object' && value !== null)) return;
     if (Object.keys(value).length !== 0 && 
-        value.drink != 0 &&
-        value.time != '' && 
-        value.date != '') {
+        value.drink !== 0 &&
+        value.time !== '' && 
+        value.date !== '') {
       const logRef = userListRef.child(userKey).child('log').push({
         drink: value.drink,
         time: value.time,
         date: value.date
       });
     }
+    console.log("storeHydLogItem OUT");
   };
 
-  const getHydLog = () => {
+  const getHydLog = async () => {
+    if (userKey === null) return;
+    console.log("getHydLog IN");
     const logRef = userListRef.child(userKey).child('log').orderByKey();
-    logRef.once('value')
-    .then(snapshot => {
-      const logObj = snapshot.val();
-      const logArr = Object.keys(logObj).map(i => logObj[i]);
-      console.log("getHydLog logArr");
-      console.log(logArr);
-      setHydLog(logArr);
-    });
+    const snapshot = await logRef.once('value');
+    const logObj = snapshot.val();
+
+    if (!(typeof logObj === 'object' && logObj !== null)) {
+      console.log("getHydLog OUT");
+      return;
+    } 
+
+    const tempLogArr = Object.keys(logObj).map(i => logObj[i]);
+    const logArr = tempLogArr.reverse().slice(0, 20);
+    setHydLog(logArr);
+    lastDate = logArr[0].date;
+    console.log("getHydLog OUT");
+  };
+
+  const changeSession = () => {
+    console.log("changeSession IN");
+    console.log(lastDate);
+    if (lastDate !== "") {
+      const now = new Date();
+      const logDate = lastDate.split(".");
+      if (logDate[2] === now.getFullYear().toString())
+        if (logDate[1] === (now.getMonth() + 1).toString())
+          if(logDate[0] === now.getDate().toString()) {
+            console.log("changeSession OUT: FALSE");
+            return false;
+          }
+
+      console.log("changeSession OUT: TRUE");
+      return true;
+    }
+    console.log("changeSession OUT: FALSE");
+    return false;
   };
 
   // Update states and settings and empty log
@@ -153,8 +191,10 @@ const AppProvider = props => {
   useEffect(() => {
     // Update local storage
     const storeHydValues = async (key, value) => {
+      console.log("storeHydValues IN");
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(key, jsonValue);
+      console.log("storeHydValues OUT");
     };
 
     // Check if hydration values object has empty values
@@ -180,50 +220,73 @@ const AppProvider = props => {
   useEffect(() => {
 
     const getHydValues = async key => {
+      console.log("getHydValues IN");
+
+      if((changeSession())) {
+        setHydValues({
+          remaining: goal,
+          average: 0,
+          drinkCount: 0,
+          balance: 0,
+          status: 0,
+          last: 0,
+        });
+        console.log("getHydValues OUT: SESSION CHANGED");
+        return;
+      }
+
       let jsonValue = await AsyncStorage.getItem(key);
       jsonValue = jsonValue != null ? JSON.parse(jsonValue) : null;
 
-      if (jsonValue != null) {
+      if (jsonValue !== null) {
         setHydValues(jsonValue);
       }
+
+      console.log("getHydValues OUT");
     };
 
     const getKey = async key => {
+      console.log("getKey IN");
       let jsonValue = await AsyncStorage.getItem(key);
       jsonValue = jsonValue != null ? JSON.parse(jsonValue) : null;
-      console.log("getKey");
-      console.log(jsonValue);
+      
 
-      if (jsonValue != null && jsonValue !== 0) {
+      if (jsonValue !== null && jsonValue !== 0) {
         userKey = jsonValue;
       } else {
         throw new Error('No userkey stored in AsyncStorage');
       }
+      console.log("getKey OUT");
     };
 
     const getSettings = async key => {
+      console.log("getSettings IN");
       let jsonValue = await AsyncStorage.getItem(key);
       jsonValue = jsonValue != null ? JSON.parse(jsonValue) : null;
 
       // Check for username in localstorage and set if found
-      if (jsonValue != null) {
+      if (jsonValue !== null) {
         setUsername(jsonValue.username);
         setWeight(jsonValue.weight);
         setAge(jsonValue.age);
         setGoal(jsonValue.goal);
       }
+      console.log("getSettings OUT");
     };
 
     const handleLoad = () => {
+      let change = false;
+      console.log("handleLoad IN");
         getSettings('settings')
         .then(() => getKey('key'))
-        .then(() => {
-          console.log('THEN-BLOCK');
-          if (userKey != null) getHydLog(userKey);
-        })
+        .then(() => getHydLog(userKey))
         .then(() => getHydValues('data'))
         .catch(e => console.log("handleLoad: " + e))
-        .finally(() => setLoading(false));
+        .finally(() => {
+          console.log("handleLoad OUT");
+          setLoading(false);
+        }) 
+      
     };
     
     handleLoad();

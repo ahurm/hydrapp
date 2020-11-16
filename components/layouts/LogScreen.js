@@ -42,7 +42,7 @@ const LogScreen = () => {
         <CustomHeader showButton={false} />
         <Content>
           <List>
-            {hydLogItems.reverse()}
+            {hydLogItems}
           </List>
         </Content>
       </Container>
