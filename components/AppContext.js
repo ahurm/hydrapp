@@ -19,6 +19,7 @@ const AppContext = createContext({
   hydLogItem: {},
   hydLog: [],
   changeSettings: () => null,
+  clearSettings: () => null,
   setLoading: () => null,
   setHydValues: () => null,
   setHydLogItem: () => null,
@@ -64,6 +65,9 @@ const AppProvider = props => {
   });
   const [hydLog, setHydLog] = useState([]);
 
+ useEffect(() => {
+   console.log("------------------------------------ Username changed: " + username);
+ }, [username])
 
   // Store firebase user key to local storage
   const storeKey = async (key, value) => {
@@ -85,11 +89,6 @@ const AppProvider = props => {
   const storeSettings = async (key, value) => {
     console.log("storeSettings IN");
     try {
-      // Push new user to Firebase and get key
-      let newUserKey = userListRef.push({
-        user: value.username
-      }).key;
-      userKey = newUserKey;
 
       // Save user settings to local storage
       const jsonValue = JSON.stringify(value);
@@ -102,10 +101,40 @@ const AppProvider = props => {
     console.log("storeSettings OUT");
   };
 
+    // Store username to Firebase
+  const handleUsername = async (name, prevName) => {
+    console.log("handleUsername IN: name:" + name);
+    console.log("handleUsername IN: prevName:" + prevName);
+    try {
+      // Push new user to Firebase and get key
+      if (name !== null && prevName.length === 0) {
+
+        let newUserKey = userListRef.push({
+          user: name
+        }).key;
+        userKey = newUserKey;
+        console.log("handleUsername: New user");
+      } else if (name !== null && prevName.length !== 0) {
+        let userRef = userListRef.child(userKey).update({
+          user: name
+        });
+        console.log("handleUsername: Username changed");
+      }
+
+    } catch (e) {
+      // saving error
+      console.log('handleUsername e: ' + e);
+    }
+    console.log("handleUsername OUT");
+  };
+
   // Store new log item to Firebase
   const storeHydLogItem = value => {
     console.log("storeHydLogItem IN");
-    if (!(typeof value === 'object' && value !== null)) return;
+    if (!(typeof value === 'object' && value !== null)) {
+      console.log("storeHydLogItem OUT: value not object");
+      return;
+    }
     if (Object.keys(value).length !== 0 && 
         value.drink !== 0 &&
         value.time !== '' && 
@@ -120,14 +149,17 @@ const AppProvider = props => {
   };
 
   const getHydLog = async () => {
-    if (userKey === null) return;
     console.log("getHydLog IN");
+    if (userKey === null) {
+      console.log("getHydLog OUT: userKey !== null");
+      return;
+    } 
     const logRef = userListRef.child(userKey).child('log').orderByKey();
     const snapshot = await logRef.once('value');
     const logObj = snapshot.val();
 
     if (!(typeof logObj === 'object' && logObj !== null)) {
-      console.log("getHydLog OUT");
+      console.log("getHydLog OUT: logObj not object");
       return;
     } 
 
@@ -160,20 +192,53 @@ const AppProvider = props => {
 
   // Update states and settings and empty log
   const changeSettings = useCallback( vals => {
-    // remove user and user related data from firebase
-    //--------
-
+    console.log("changeSettings IN");
     // Update states
+    const prevUsername = username;
+    console.log("changeSettings prevUsername" + prevUsername);
     setUsername(vals.username);
     setWeight(vals.weight);
     setAge(vals.age);
     setGoal(vals.goal);
 
     // Update hydration values
+    setHydValues( prevValues => ({
+      ...prevValues,
+      remaining: vals.goal - prevValues.status,
+      balance: ((prevValues.status / vals.goal) * 100).toFixed(2),
+    }));
+
+    // Empty log and log item states
+    setHydLogItem({});
+    setHydLog([]);
+
+    // Write settings and key to local storage and firebase
+    handleUsername(vals.username, prevUsername);
+    storeSettings('settings', vals);
+    storeKey('key', userKey);
+    console.log("changeSettings OUT");
+  }, [username]);
+
+  // Update states and settings and empty log
+  const clearSettings = useCallback( () => {
+    console.log("clearSettings IN");
+    // remove user and user related data from firebase
+    deleteFirebaseData();
+
+    // Update states
+    setUsername('');
+    setWeight('');
+    setAge('');
+    setGoal(0);
+
+    // Update hydration values
     setHydValues({
-      ...hydValues,
-      remaining: vals.goal - hydValues.status,
-      balance: ((hydValues.status / vals.goal) * 100).toFixed(2),
+      remaining: 0,
+      average: 0,
+      drinkCount: 0,
+      balance: 0,
+      status: 0,
+      last: 0,
     });
 
     // Empty log and log item states
@@ -181,9 +246,33 @@ const AppProvider = props => {
     setHydLog([]);
 
     // Write settings and key to local storage and firebase
-    storeSettings('settings', vals);
-    storeKey('key', userKey);
-  }, []);
+    storeSettings('settings', null);
+    storeKey('key', '');
+    console.log("clearSettings OUT");
+  });
+
+  const deleteFirebaseData = async () => {
+    console.log("deleteFirebaseData IN");
+    if (userKey === null) {
+      console.log("deleteFirebaseData OUT: userKey === null");
+      return;
+    } 
+    
+    const userRef = userListRef.child(userKey);
+    userRef.remove()
+    .then(() => {
+      console.log("Remove succeeded.")
+    })
+    .catch(e => {
+      console.log("deleteFirebaseData e: " + e)
+    });
+    console.log("deleteFirebaseData OUT");
+  };
+
+
+
+
+
 
 
 
@@ -266,6 +355,7 @@ const AppProvider = props => {
 
       // Check for username in localstorage and set if found
       if (jsonValue !== null) {
+        console.log("getSettings username:" + jsonValue.username);
         setUsername(jsonValue.username);
         setWeight(jsonValue.weight);
         setAge(jsonValue.age);
@@ -304,6 +394,7 @@ const AppProvider = props => {
         hydLogItem,
         hydLog,
         changeSettings,
+        clearSettings,
         setLoading,
         setHydValues,
         setHydLogItem,

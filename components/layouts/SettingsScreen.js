@@ -11,13 +11,13 @@ const SettingsScreen = () => {
   const [tempWeight, setTempWeight] = useState();
   const [tempAge, setTempAge] = useState();
 
-  const {username, weight, age, goal, changeSettings} = useContext(AppContext);
+  const {username, weight, age, goal, clearSettings, changeSettings} = useContext(AppContext);
 
   const clearData = () => {
     setTempUsername('');
     setTempWeight('');
     setTempAge('');
-    changeSettings('', '', '', 0);
+    clearSettings();
   };
 
   const calculateGoal = (weight, age) => {
