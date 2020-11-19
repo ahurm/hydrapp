@@ -28,7 +28,7 @@ const HydrationScreen = () => {
     return i;
   };
 
-  const updateValues = (value) => {
+  const updateValues = value => {
     const updatedValues = {
       ...hydValues,
     };
@@ -44,15 +44,16 @@ const HydrationScreen = () => {
     remaining = remaining.toFixed(2);
     balance = balance.toFixed(2);
     average = average.toFixed(0);
-    console.log("updateValues setHydValues");
+
     setHydValues({remaining, average, drinkCount, balance, status, last});
     
-    // Update log item
+    // Update log item state
     const timestamp = new Date();
     const date = timestamp.getDate() + '.' + (timestamp.getMonth()+1) + '.' + timestamp.getFullYear();
     const minutes = addZero(timestamp.getMinutes()); 
     const hours = addZero(timestamp.getHours());
     const time = hours + ':' + minutes;
+
     setHydLogItem({drink: value, time: time, date: date});
   };
 
@@ -96,12 +97,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-  },
-  headerBody: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
   },
 });
 

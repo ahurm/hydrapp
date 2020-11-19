@@ -1,6 +1,14 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Body, Button, Container, Content, Form, Input, Item, Label, Text} from 'native-base';
+import {Body, 
+        Button, 
+        Container, 
+        Content, 
+        Form, 
+        Input, 
+        Item, 
+        Label, 
+        Text} from 'native-base';
 
 import {AppContext} from '../AppContext';
 import CustomHeader from '../CustomHeader';
@@ -54,15 +62,12 @@ const SettingsScreen = () => {
     changeSettings(values);
   };
 
-
-
   useEffect(() => {
     setTempUsername(username);
     setTempWeight(weight);
     setTempAge(age);
   }, [username, weight, age])
   
-
   return (
     <Container style={styles.container}>
       <CustomHeader showButton={false} />

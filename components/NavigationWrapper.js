@@ -24,12 +24,10 @@ const NavigationWrapper = () => {
   } else {
     return (
       <NavigationContainer>
-        {console.log("NavigationContainer username: " + username)}
-        {console.log("NavigationContainer loading: " + loading)}
         {username && username.length > 0 ? <Tab.Navigator
           screenOptions={({route}) => ({
             tabBarIcon: ({focused, color, size}) => {
-              let iconName;
+              let iconName = "";
   
               if (route.name === 'Hydration') {
                 iconName = focused ? 'water' : 'water-outline';
@@ -38,8 +36,7 @@ const NavigationWrapper = () => {
               } else if (route.name === 'Settings') {
                 iconName = focused ? 'list-circle' : 'list-circle-outline';
               }
-  
-              // You can return any component that you like here!
+
               return <Ionicons name={iconName} size={size} color={color} />;
             },
           })}
@@ -55,7 +52,6 @@ const NavigationWrapper = () => {
       </NavigationContainer>
     );
   }
-
 };
 
 export default NavigationWrapper;

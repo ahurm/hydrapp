@@ -19,8 +19,7 @@ import DataItem from '../DataItem';
 const LogScreen = () => {
   const {hydLog} = useContext(AppContext);
   const hydLogItems = [];
-  console.log("LogScreen hydLog");
-  console.log(hydLog);
+
   // Check if log exists
   if (hydLog.length > 0) {
     hydLog.map((el, i) => {
@@ -52,7 +51,7 @@ const LogScreen = () => {
     return (
       <Container style={styles.container}>
         <CustomHeader showButton={false} />
-        <Content>
+        <Content contentContainerStyle={styles.contentContainer}>
           <Text>Log not found.</Text>
         </Content>
       </Container>
@@ -64,6 +63,11 @@ const LogScreen = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#EFEFEF',
+  },
+  contentContainer : {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   listItemRow: {
     flex: 1,
