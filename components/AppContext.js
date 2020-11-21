@@ -2,6 +2,7 @@ import React, {createContext, useState, useCallback, useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from "firebase";
 import { createIconSetFromFontello } from 'react-native-vector-icons';
+import Toast from 'react-native-toast-message';
 
 // Ignore timer warning
 // https://github.com/facebook/react-native/issues/12981#issuecomment-652745831
@@ -168,7 +169,7 @@ const AppProvider = props => {
 
     setHydValues( prevValues => ({
       ...prevValues,
-      remaining: vals.goal - prevValues.status,
+      remaining: (vals.goal - prevValues.status).toFixed(2),
       balance: ((prevValues.status / vals.goal) * 100).toFixed(2),
     }));
 
@@ -327,6 +328,7 @@ const AppProvider = props => {
         setHydLogItem,
       }}>
       {props.children}
+      <Toast ref={(ref) => Toast.setRef(ref)} />
     </AppContext.Provider>
   );
 };
