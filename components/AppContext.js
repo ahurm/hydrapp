@@ -68,26 +68,31 @@ const AppProvider = props => {
   const [hydLog, setHydLog] = useState([]);
 
   // Store firebase key to local storage
-  const storeKey = async (key, value) => {    
+  const storeKey = async (key, value) => {  
+    console.log('storeKey IN');  
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(key, jsonValue);
     } catch (e) {
       // saving error
       console.log('storeKey e: ' + e);
+      throw new Error("Error in storeKey function, saving aborted");
     }    
+    console.log('storeKey OUT');  
   };
 
   // Store user settings to local storage
   const storeSettings = async (key, value) => {
+    console.log('storeSettings IN');
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(key, jsonValue);
-
     } catch (e) {
       // saving error
       console.log('storeSettings e: ' + e);
+      throw new Error("Error in storeSettings function, saving aborted");
     }
+    console.log('storeSettings OUT');
   };
 
   // Create new user and key or update username to Fireabase
@@ -178,8 +183,41 @@ const AppProvider = props => {
 
     // Write settings and key to local storage and firebase
     handleUsername(vals.username, prevUsername);
-    storeSettings('settings', vals);
-    storeKey('key', userKey);
+
+    console.log("Promise IN");
+    const promises = []
+    promises.push(storeSettings('settings', vals));
+    promises.push(storeKey('key', userKey));
+    Promise.all(promises)
+      .then(() => {
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Success',
+          text2: 'Settings saved! 👍',
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 65,
+          bottomOffset: 40,
+          onShow: () => {},
+          onHide: () => {}
+        });
+      })
+      .catch(() => {
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error',
+          text2: 'Something went wrong!',
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 65,
+          bottomOffset: 40,
+          onShow: () => {},
+          onHide: () => {}
+        }); 
+      }); 
+
   }, [username]);
 
   // Remove user from Firebase and reset state and local storage
@@ -203,8 +241,39 @@ const AppProvider = props => {
     setHydLogItem({});
     setHydLog([]);
 
-    storeSettings('settings', null);
-    storeKey('key', '');
+    console.log("Promise IN");
+    const promises = []
+    promises.push(storeSettings('settings', null));
+    promises.push(storeKey('key', ''));
+    Promise.all(promises)
+      .then(() => {
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Success',
+          text2: 'Settings cleared! 👍',
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 65,
+          bottomOffset: 40,
+          onShow: () => {},
+          onHide: () => {}
+        });
+      })
+      .catch(() => {
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error',
+          text2: 'Something went wrong!',
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 65,
+          bottomOffset: 40,
+          onShow: () => {},
+          onHide: () => {}
+        }); 
+      });
   });
 
   const deleteFirebaseData = async () => {

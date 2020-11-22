@@ -9,7 +9,6 @@ import {Body,
         Item, 
         Label, 
         Text} from 'native-base';
-import Toast from 'react-native-toast-message';
 
 import {AppContext} from '../AppContext';
 import CustomHeader from '../CustomHeader';
@@ -61,10 +60,6 @@ const SettingsScreen = () => {
       goal: tempGoal,
     };
     changeSettings(values);
-    Toast.show({
-      text1: 'Hello',
-      text2: 'This is some something 👋'
-    });
   };
 
   useEffect(() => {
@@ -110,10 +105,10 @@ const SettingsScreen = () => {
               </Item>
             </Form>
             <View style={styles.buttonContainer}>
-              <Button rounded onPress={handleSave}>
+              <Button rounded disabled={!(tempUsername && tempWeight && tempAge)} onPress={handleSave}>
                 <Text>Save</Text>
               </Button>
-              <Button rounded onPress={clearData}>
+              <Button rounded disabled={!tempUsername && !tempWeight && !tempAge} onPress={clearData}>
                 <Text>Clear</Text>
               </Button>
             </View>
