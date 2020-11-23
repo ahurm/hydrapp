@@ -4,6 +4,6 @@ This app is used to log daily hydration. Daily hydration needs are calculated ba
 This app was developed with React Native and it uses Firebase as a database.
 
 Created by  
-Matias Ruha
-N4970
-TTV19SMM
+Matias Ruha  
+N4970  
+TTV19SMM  
