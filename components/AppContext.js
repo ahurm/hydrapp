@@ -42,8 +42,10 @@ firebase.initializeApp(firebaseConfig);
 // Get a reference to the database service
 const db = firebase.database();
 const userListRef = db.ref('users');
+
 let userKey = "";
 let lastDate = "";
+let g_goal = 0;
 
 const AppProvider = props => {
   // States
@@ -69,7 +71,6 @@ const AppProvider = props => {
 
   // Store firebase key to local storage
   const storeKey = async (key, value) => {  
-    console.log('storeKey IN');  
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(key, jsonValue);
@@ -78,12 +79,10 @@ const AppProvider = props => {
       console.log('storeKey e: ' + e);
       throw new Error("Error in storeKey function, saving aborted");
     }    
-    console.log('storeKey OUT');  
   };
 
   // Store user settings to local storage
   const storeSettings = async (key, value) => {
-    console.log('storeSettings IN');
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(key, jsonValue);
@@ -92,7 +91,6 @@ const AppProvider = props => {
       console.log('storeSettings e: ' + e);
       throw new Error("Error in storeSettings function, saving aborted");
     }
-    console.log('storeSettings OUT');
   };
 
   // Create new user and key or update username to Fireabase
@@ -156,12 +154,22 @@ const AppProvider = props => {
       if (logDate[2] === now.getFullYear().toString())
         if (logDate[1] === (now.getMonth() + 1).toString())
           if(logDate[0] === now.getDate().toString()) 
-            return false;
-
-      return true;
+            return;
+  
+      // Reset values if day (sessio) has been changed
+      setHydValues({
+        remaining: g_goal,
+        average: 0,
+        drinkCount: 0,
+        balance: 0,
+        status: 0,
+        last: 0,
+      });
+      return; 
     }
-    return false;
+    return;
   };
+  
 
   // Update states and settings and empty log
   const changeSettings = useCallback( vals => {
@@ -184,7 +192,6 @@ const AppProvider = props => {
     // Write settings and key to local storage and firebase
     handleUsername(vals.username, prevUsername);
 
-    console.log("Promise IN");
     const promises = []
     promises.push(storeSettings('settings', vals));
     promises.push(storeKey('key', userKey));
@@ -241,7 +248,7 @@ const AppProvider = props => {
     setHydLogItem({});
     setHydLog([]);
 
-    console.log("Promise IN");
+
     const promises = []
     promises.push(storeSettings('settings', null));
     promises.push(storeKey('key', ''));
@@ -320,19 +327,6 @@ const AppProvider = props => {
     // Get hydration values from local storage
     const getHydValues = async key => {
 
-      // Reset values if day (sessio) has been changed
-      if((changeSession())) {
-        setHydValues({
-          remaining: goal,
-          average: 0,
-          drinkCount: 0,
-          balance: 0,
-          status: 0,
-          last: 0,
-        });
-        return;
-      }
-
       let jsonValue = await AsyncStorage.getItem(key);
       jsonValue = jsonValue != null ? JSON.parse(jsonValue) : null;
 
@@ -362,6 +356,7 @@ const AppProvider = props => {
         setWeight(jsonValue.weight);
         setAge(jsonValue.age);
         setGoal(jsonValue.goal);
+        g_goal = jsonValue.goal;
       }
     };
 
@@ -372,6 +367,7 @@ const AppProvider = props => {
         .then(() => getKey('key'))
         .then(() => getHydLog(userKey))
         .then(() => getHydValues('data'))
+        .then(() => changeSession())
         .catch(e => console.log("handleLoad: " + e))
         .finally(() => setLoading(false));
     };
